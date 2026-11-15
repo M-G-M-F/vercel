@@ -1,0 +1,4 @@
+investigation_id,run_id,source_file,source_row,x_secondary_row,date_raw,date_excel_raw,date_corrected,gmt_day_raw,gmt_day,date_quality_flag,date_evidence,date_alternative
+PSI-25,PSI-25:T9:109,PSI-25_BASS-II_raw.csv,109,T'ien!9,6/24/2018,2018-06-24 00:00:00,2014-06-24,175,175,year_inferred_from_sheet_header,,
+PSI-25,PSI-25:T18:118,PSI-25_BASS-II_raw.csv,118,T'ien!18,6/24/2018,2018-06-24 00:00:00,2014-06-24,175,175,year_inferred_from_sheet_header,,
+PSI-25,PSI-25:O10:60,PSI-25_BASS-II_raw.csv,60,Olson!14,7/22/2014,2014-07-22 00:00:00,2014-07-22,213,203,gmt_inferred_provisional,"Olson row 14; row 23 O17 same July 22 GMT 203, similar rod and consecutive sample 211m; rows 19/25 Aug 1 GMT 213. Other PI July 22 GMT 203. No direct O10 video.",2014-08-01

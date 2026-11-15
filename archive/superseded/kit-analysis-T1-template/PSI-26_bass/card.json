@@ -1,0 +1,73 @@
+{
+  "investigation_id": "PSI-26",
+  "title": "Burning and Suppression of Solids",
+  "acronym": "BASS",
+  "doi": "10.60555/58h4-dy80",
+  "license": "Creative Commons Zero v1.0 Universal",
+  "version": "unconfirmed",
+  "sub_research_area": "Spacecraft Fire Safety",
+  "related_investigations": [
+    "PSI-107",
+    "PSI-25"
+  ],
+  "size_on_page": "155,975 MB",
+  "file_types_and_counts": {
+    "mp4": 114,
+    "zip": 60,
+    "pdf": 30,
+    "pptx": 2,
+    "xlsx": 2,
+    "csv": 1,
+    "docx": 1
+  },
+  "has_experiment_table": "yes",
+  "objectives": "TODO: 2 sentences in your own words (read Description on the PSI page)",
+  "approach": "TODO: 2 sentences in your own words",
+  "publications": [
+    {
+      "title": "The Microgravity Science Glovebox as a Platform for Exploration Research on the International Space Station",
+      "link": "https://doi.org/10.2514/6.2006-941"
+    },
+    {
+      "title": "Opposed-flow flame spread: A comparison of microgravity and normal gravity experiments to establish the thermal regime",
+      "link": "https://doi.org/10.1016/j.firesaf.2015.11.011"
+    },
+    {
+      "title": "Simplified model for predicting difference between flammability limits of a thin material in normal gravity and microgravity environments",
+      "link": "https://doi.org/10.1016/j.proci.2014.07.017"
+    },
+    {
+      "title": "A Correlation for an Effective Flow Velocity for Capturing the Boundary Layer Effect in Opposed-Flow Flame Spread over Thin Fuels",
+      "link": "https://doi.org/10.1080/00102202.2014.900056"
+    },
+    {
+      "title": "Radiation signature in opposed-flow flame spread",
+      "link": "https://doi.org/10.1504/PCFD.2012.048249"
+    },
+    {
+      "title": "OS24-1 The Effect of Boundary Layer on Blow-Off Extinction in Opposed-Flow Flame Spread: Results of Experiments and Simplified Analysis(invited,Scale modeling on solid combustion,OS24 Scale modeling,FLUID AND THERMODYNAMICS)",
+      "link": "https://doi.org/10.1299/jsmeatem.2015.14.289"
+    },
+    {
+      "title": "Role of Gas Radiation in the Mechanism of Opposed-Flow Flame Spread in a Microgravity Environment",
+      "link": "unconfirmed"
+    },
+    {
+      "title": "Thickness and Fuel Preheating Effects on Material Flammability in Microgravity from the BASS Experiment",
+      "link": "unconfirmed"
+    },
+    {
+      "title": "A novel apparatus for flame spread study",
+      "link": "https://doi.org/10.1016/j.proci.2012.05.076"
+    },
+    {
+      "title": "Opposed-Flow Flame Spread in a Narrow Channel Apparatus over Thin PMMA Sheets",
+      "link": "unconfirmed"
+    }
+  ],
+  "verified_on": "",
+  "verified_by": "",
+  "x_prefilled_from": "NASA PSI API (investigation record and file listing), retrieved 2026-11-14; NOT yet checked on the page",
+  "x_psi_page": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-26",
+  "x_how_to_verify": "Open x_psi_page, compare every field, correct what differs, read the version from the page, then fill verified_on (date and time) and verified_by (your name). size_on_page uses 1 MB = 1,048,576 bytes, as the page does."
+}

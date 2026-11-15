@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""Build data/rag-data.js from the rag/ folder.
+
+    rag/
+      SLICE/   notes.md, results.txt, ...      <- one folder per dataset (the folder name IS the topic)
+      SPICE/   ...
+      SAME/    ...
+
+    python build_rag.py --init     # once: create the empty folders listed in content/rag-map.json
+    python build_rag.py            # then refresh the page
+
+Which character reads which folder is set in content/rag-map.json:
+    {"nadeem": ["SAME"], "tamer": ["SLICE", "SPICE"], "guide": ["*"]}
+"*" means every folder. Files are .md or .txt. Markdown headings (# ... ####) become the chunk
+title, so write each fact under a clear heading. Long sections are split into ~120-word chunks.
+Everything is written into ONE JS file because browsers block fetch() on file://.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+EXTS = {".md", ".txt"}
+
+
+def split_sections(text: str) -> list[tuple[str, str]]:
+    sections, title, buf = [], "", []
+    for line in text.splitlines():
+        m = re.match(r"^#{1,4}\s+(.*\S)\s*$", line)
+        if m:
+            if "".join(buf).strip():
+                sections.append((title, "\n".join(buf)))
+            title, buf = m.group(1), []
+        else:
+            buf.append(line)
+    if "".join(buf).strip():
+        sections.append((title, "\n".join(buf)))
+    return sections
+
+
+def pieces(paragraph: str, max_words: int) -> list[str]:
+    """Split one very long paragraph on sentence ends."""
+    if len(paragraph.split()) <= max_words:
+        return [paragraph]
+    out, cur, n = [], [], 0
+    for s in re.split(r"(?<=[.!?])\s+", paragraph):
+        w = len(s.split())
+        if cur and n + w > max_words:
+            out.append(" ".join(cur))
+            cur, n = [], 0
+        cur.append(s)
+        n += w
+    if cur:
+        out.append(" ".join(cur))
+    return out
+
+
+def chunk(body: str, max_words: int, overlap_words: int) -> list[str]:
+    paras = []
+    for p in re.split(r"\n\s*\n", body):
+        p = p.strip()
+        if p:
+            paras += pieces(p, max_words)
+    chunks, cur, n = [], [], 0
+    for p in paras:
+        w = len(p.split())
+        if cur and n + w > max_words:
+            chunks.append("\n\n".join(cur))
+            last = cur[-1]
+            cur = [last] if len(last.split()) <= overlap_words else []
+            n = sum(len(x.split()) for x in cur)
+        cur.append(p)
+        n += w
+    if cur:
+        chunks.append("\n\n".join(cur))
+    return chunks
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--rag", type=Path, default=HERE / "rag")
+    ap.add_argument("--max-words", type=int, default=120)
+    ap.add_argument("--overlap-words", type=int, default=30)
+    ap.add_argument("--init", action="store_true", help="create an empty rag/<TOPIC>/ folder for every topic in content/rag-map.json")
+    args = ap.parse_args()
+
+    if args.init:
+        mp0 = HERE / "content" / "rag-map.json"
+        for lst in json.loads(mp0.read_text(encoding="utf-8-sig")).values():
+            for t in lst:
+                if t != "*":
+                    (args.rag / t).mkdir(parents=True, exist_ok=True)
+        print("created folders under", args.rag)
+
+    topics: dict[str, list[dict]] = {}
+    if not args.rag.is_dir():
+        print(f"no folder {args.rag} - create rag/<TOPIC>/ with .md or .txt files")
+    else:
+        for folder in sorted(p for p in args.rag.iterdir() if p.is_dir()):
+            items = []
+            for f in sorted(folder.rglob("*")):
+                if f.suffix.lower() not in EXTS or not f.is_file():
+                    continue
+                text = f.read_text(encoding="utf-8-sig", errors="replace")
+                rel = f.relative_to(folder).as_posix()
+                n = 0
+                for title, body in split_sections(text):
+                    for c in chunk(body, args.max_words, args.overlap_words):
+                        n += 1
+                        items.append({"id": f"{folder.name}/{rel}#{n}", "source": rel,
+                                      "title": title or f.stem.replace("_", " "), "text": c})
+            topics[folder.name] = items
+            print(f"{folder.name}: {len(items)} chunks")
+
+    rag_map = {}
+    mp = HERE / "content" / "rag-map.json"
+    if mp.exists():
+        rag_map = json.loads(mp.read_text(encoding="utf-8-sig"))
+    known = {t.lower() for t in topics}
+    for cid, lst in rag_map.items():
+        for t in lst:
+            if t != "*" and t.lower() not in known:
+                print(f"  warning: {cid} points to '{t}' but rag/{t}/ does not exist")
+
+    data = {"built": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "map": rag_map, "topics": topics}
+    out = HERE / "data" / "rag-data.js"
+    out.parent.mkdir(exist_ok=True)
+    out.write_text("/* generated by build_rag.py - do not edit */\nwindow.FIF_RAG_DATA = "
+                   + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
+    print(f"wrote {out.relative_to(HERE)} ({out.stat().st_size / 1024:.0f} KB): "
+          f"{len(topics)} topics, {sum(len(v) for v in topics.values())} chunks")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

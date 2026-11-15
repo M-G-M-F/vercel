@@ -1,0 +1,7 @@
+{
+  "_help": "Optional online answers. Leave api_url empty to use only the offline answers. If set, the site POSTs {question, character, context} to it (see tools/llm_proxy.py) and expects {answer}. Never put an API key here: the server holds it. 'rag': false turns off the per-character RAG texts.",
+  "api_url": "http://localhost:8899/ask",
+  "timeout_ms": 8000,
+  "min_score": 0.14,
+  "rag": true
+}

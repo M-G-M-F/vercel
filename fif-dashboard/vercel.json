@@ -1,0 +1,3 @@
+{
+  "functions": { "api/ask.py": { "maxDuration": 30 } }
+}

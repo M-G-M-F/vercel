@@ -1,0 +1,6 @@
+source_file,source_row,x_test_id,x_oxygen_pct_initial,x_oxygen_pct_final
+PSI-25_BASS-II_raw.csv,3,B2,22.2,1.6
+PSI-25_BASS-II_raw.csv,97,P22A,20.8,0.6
+PSI-25_BASS-II_raw.csv,98,P22B,20.0,39.1
+PSI-25_BASS-II_raw.csv,128,T28A,20.7,0.9
+PSI-25_BASS-II_raw.csv,129,T28B,20.7,40.4
